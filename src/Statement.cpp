@@ -109,10 +109,10 @@ void Statement::bind(const int aIndex, const double aValue)
 }
 
 // Bind a string value to a parameter "?", "?NNN", ":VVV", "@VVV" or "$VVV" in the SQL prepared statement
-void Statement::bind(const int aIndex, const std::string& aValue)
+void Statement::bind(const int aIndex, std::string_view aValue)
 {
-    const int ret = sqlite3_bind_text(getPreparedStatement(), aIndex, aValue.c_str(),
-                                      static_cast<int>(aValue.size()), SQLITE_TRANSIENT);
+    const int ret = sqlite3_bind_text64(getPreparedStatement(), aIndex, aValue.data(),
+                                        aValue.size(), SQLITE_TRANSIENT, SQLITE_UTF8);
     check(ret);
 }
 
@@ -124,17 +124,17 @@ void Statement::bind(const int aIndex, const char* apValue)
 }
 
 // Bind a binary blob value to a parameter "?", "?NNN", ":VVV", "@VVV" or "$VVV" in the SQL prepared statement
-void Statement::bind(const int aIndex, const void* apValue, const int aSize)
+void Statement::bind(const int aIndex, std::span<const std::byte> apValue)
 {
-    const int ret = sqlite3_bind_blob(getPreparedStatement(), aIndex, apValue, aSize, SQLITE_TRANSIENT);
+    const int ret = sqlite3_bind_blob64(getPreparedStatement(), aIndex, apValue.data(), apValue.size(), SQLITE_TRANSIENT);
     check(ret);
 }
 
 // Bind a string value to a parameter "?", "?NNN", ":VVV", "@VVV" or "$VVV" in the SQL prepared statement
-void Statement::bindNoCopy(const int aIndex, const std::string& aValue)
+void Statement::bindNoCopy(const int aIndex, std::string_view aValue)
 {
-    const int ret = sqlite3_bind_text(getPreparedStatement(), aIndex, aValue.c_str(),
-                                      static_cast<int>(aValue.size()), SQLITE_STATIC);
+    const int ret = sqlite3_bind_text64(getPreparedStatement(), aIndex, aValue.data(),
+                                        aValue.size(), SQLITE_STATIC, SQLITE_UTF8);
     check(ret);
 }
 
@@ -146,9 +146,9 @@ void Statement::bindNoCopy(const int aIndex, const char* apValue)
 }
 
 // Bind a binary blob value to a parameter "?", "?NNN", ":VVV", "@VVV" or "$VVV" in the SQL prepared statement
-void Statement::bindNoCopy(const int aIndex, const void* apValue, const int aSize)
+void Statement::bindNoCopy(const int aIndex, std::span<const std::byte> apValue)
 {
-    const int ret = sqlite3_bind_blob(getPreparedStatement(), aIndex, apValue, aSize, SQLITE_STATIC);
+    const int ret = sqlite3_bind_blob64(getPreparedStatement(), aIndex, apValue.data(), apValue.size(), SQLITE_STATIC);
     check(ret);
 }
 
