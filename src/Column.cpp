@@ -86,6 +86,13 @@ const void* Column::getBlob() const noexcept
     return sqlite3_column_blob(mStmtPtr.get(), mIndex);
 }
 
+std::span<const std::byte> Column::getBlobAsSpan() const noexcept
+{
+    auto blob = sqlite3_column_blob(mStmtPtr.get(), mIndex);
+    int bytes = sqlite3_column_bytes(mStmtPtr.get(), mIndex);
+    return std::span<const std::byte>(reinterpret_cast<const std::byte*>(blob), static_cast<std::size_t>(bytes));
+}
+
 // Return a std::string to a TEXT or BLOB column
 std::string Column::getString() const
 {
