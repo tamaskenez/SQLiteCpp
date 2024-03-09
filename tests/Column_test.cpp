@@ -132,6 +132,10 @@ static void test_column_basis(bool utf16)
         EXPECT_DOUBLE_EQ(0.123, real);
         EXPECT_EQ(0,            memcmp("bl\0b", pblob, 4));
         EXPECT_EQ(0,            memcmp("bl\0b", &sblob[0], 4));
+        std::span<const std::byte> blobAsSpan = query.getColumn(4).getBlobAsSpan();
+        EXPECT_EQ(4,            blobAsSpan.size());
+        EXPECT_EQ(0,            memcmp("bl\0b", blobAsSpan.data(), 4));
+
     }
 
     // Validate getBytes(), getType(), isInteger(), isNull()...

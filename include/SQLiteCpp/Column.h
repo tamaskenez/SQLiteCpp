@@ -97,6 +97,13 @@ public:
      */
     const void* getBlob() const noexcept;
     /**
+     * @brief Return a pointer to the binary blob value of the column.
+     *
+     * @warning The value pointed at is only valid while the statement is valid (ie. not finalized),
+     *          thus you must copy it before using it beyond its scope (to a std::string for instance).
+     */
+    std::span<const std::byte> getBlobAsSpan() const noexcept;
+    /**
      * @brief Return a std::string for a TEXT or BLOB column.
      *
      * Note this correctly handles strings that contain null bytes.
