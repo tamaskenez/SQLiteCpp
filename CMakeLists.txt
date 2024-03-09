@@ -8,11 +8,11 @@ cmake_minimum_required(VERSION 3.5)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake") # custom CMake modules like FindSQLiteCpp
 project(SQLiteCpp VERSION 3.3.2)
 
-# SQLiteC++ 3.x requires C++11 features
+# SQLiteC++ 3.x requires C++20 features
 if (NOT CMAKE_CXX_STANDARD)
-    set(CMAKE_CXX_STANDARD 11)
-elseif (CMAKE_CXX_STANDARD LESS 11)
-    message(WARNING "CMAKE_CXX_STANDARD has been set to '${CMAKE_CXX_STANDARD}' which is lower than the minimum required standard (c++11).")
+    set(CMAKE_CXX_STANDARD 20)
+elseif (CMAKE_CXX_STANDARD LESS 20)
+    message(WARNING "CMAKE_CXX_STANDARD has been set to '${CMAKE_CXX_STANDARD}' which is lower than the minimum required standard (c++20).")
 endif ()
 message(STATUS "Using c++ standard c++${CMAKE_CXX_STANDARD}")
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -83,7 +83,7 @@ else (MSVC) # Unix/macOS/MinGW
             add_compile_options(-fstack-protector)
         endif (SQLITECPP_USE_STACK_PROTECTION)
     endif (NOT MINGW)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Wswitch-enum -Wshadow -Wno-long-long") # C++ only, don't bother with sqlite3
+    add_compile_options(-Wall -Wextra -Wpedantic -Wswitch-enum -Wshadow -Wno-long-long) # C++ only, don't bother with sqlite3
     if (CMAKE_COMPILER_IS_GNUCXX)
         # GCC flags
         option(SQLITECPP_USE_GCOV "USE GCov instrumentation." OFF)
